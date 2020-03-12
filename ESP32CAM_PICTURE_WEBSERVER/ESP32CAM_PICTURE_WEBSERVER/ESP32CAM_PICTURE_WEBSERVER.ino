@@ -56,8 +56,8 @@ const char index_html[] PROGMEM = R"rawliteral(
     <h2>ESP32-CAM PICTURE</h2>
     <p>It can be some delay (wait for 5 seconds).</p>
     <p>
-      <button onclick="rotatePhoto();">ROTATE</button>
-      <button onclick="capturePhoto()">CAPTURE</button>
+      <button onclick="rotatePicture();">ROTATE</button>
+      <button onclick="capturePicture()">CAPTURE</button>
       <button onclick="location.reload();">REFRESH</button>
     </p>
   </div>
@@ -65,12 +65,12 @@ const char index_html[] PROGMEM = R"rawliteral(
 </body>
 <script>
   var deg = 0;
-  function capturePhoto() {
+  function capturePicture() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', "/capture", true);
     xhr.send();
   }
-  function rotatePhoto() {
+  function rotatePicture() {
     var img = document.getElementById("photo");
     deg += 90;
     if(isOdd(deg/90)){ document.getElementById("container").className = "vert"; }
