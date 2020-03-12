@@ -18,10 +18,10 @@ const char* password = "1234";
 //we create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
-boolean takeNewPhoto = false;
+boolean takeNewPicture = false;
 
 //name for picture file which will be saved in SPIFFS
-#define FILE_PHOTO "/photo.jpg"
+#define FILE_PHOTO "/picture.jpg"
 
 //OV2640 camera module pins (we use AI Thinker ESP32-CAM development board)
 #define PWDN_GPIO_NUM     32
@@ -61,7 +61,7 @@ const char index_html[] PROGMEM = R"rawliteral(
       <button onclick="location.reload();">REFRESH</button>
     </p>
   </div>
-  <div><img src="saved-photo" id="photo" width="70%"></div>
+  <div><img src="saved-picture" id="picture" width="70%"></div>
 </body>
 <script>
   var deg = 0;
@@ -71,7 +71,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     xhr.send();
   }
   function rotatePicture() {
-    var img = document.getElementById("photo");
+    var img = document.getElementById("picture");
     deg += 90;
     if(isOdd(deg/90)){ document.getElementById("container").className = "vert"; }
     else{ document.getElementById("container").className = "hori"; }
@@ -156,7 +156,7 @@ void setup() {
     request->send_P(200, "text/plain", "Taking Picture");
   });
 
-  server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest * request) {
+  server.on("/saved-picture", HTTP_GET, [](AsyncWebServerRequest * request) {
     request->send(SPIFFS, FILE_PHOTO, "image/jpg", false);
   });
 
