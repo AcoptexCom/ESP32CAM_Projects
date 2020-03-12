@@ -139,7 +139,7 @@ void setup() {
     config.jpeg_quality = 12;
     config.fb_count = 1;
   }
-  // Camera init
+  //we initialise the camera
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
@@ -152,7 +152,7 @@ void setup() {
   });
 
   server.on("/capture", HTTP_GET, [](AsyncWebServerRequest * request) {
-    takeNewPhoto = true;
+    takeNewPicture = true;
     request->send_P(200, "text/plain", "Taking Picture");
   });
 
@@ -166,28 +166,28 @@ void setup() {
 }
 
 void loop() {
-  if (takeNewPhoto) {
-    capturePhotoSaveSpiffs();
-    takeNewPhoto = false;
+  if (takeNewPicture) {
+    capturePictureSaveSpiffs();
+    takeNewPicture = false;
   }
   delay(1);
 }
 
-// Check if photo capture was successful
+//we check if picture captured successfully
 bool checkPhoto( fs::FS &fs ) {
   File f_pic = fs.open( FILE_PHOTO );
   unsigned int pic_sz = f_pic.size();
   return ( pic_sz > 100 );
 }
 
-// Capture Photo and Save it to SPIFFS
-void capturePhotoSaveSpiffs( void ) {
+//we capture a picture and save it in SPIFFS
+void capturePictureSaveSpiffs( void ) {
   camera_fb_t * fb = NULL; // pointer
   bool ok = 0; // Boolean indicating if the picture has been taken correctly
 
   do {
-    // Take a photo with the camera
-    Serial.println("Taking a photo...");
+    //we take a picture with the camera
+    Serial.println("Taking a picture...");
 
     fb = esp_camera_fb_get();
     if (!fb) {
@@ -195,11 +195,11 @@ void capturePhotoSaveSpiffs( void ) {
       return;
     }
 
-    // Photo file name
+    //picture file name
     Serial.printf("Picture file name: %s\n", FILE_PHOTO);
     File file = SPIFFS.open(FILE_PHOTO, FILE_WRITE);
 
-    // Insert the data in the photo file
+    //we insert the data in the picture file
     if (!file) {
       Serial.println("Failed to open file in writing mode");
     }
@@ -211,11 +211,11 @@ void capturePhotoSaveSpiffs( void ) {
       Serial.print(file.size());
       Serial.println(" bytes");
     }
-    // Close the file
+    //we close the file
     file.close();
     esp_camera_fb_return(fb);
 
-    // check if file has been correctly saved in SPIFFS
+    //then check if file has been correctly saved in SPIFFS
     ok = checkPhoto(SPIFFS);
   } while ( !ok );
 }
